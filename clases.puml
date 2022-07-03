@@ -1,0 +1,82 @@
+@startuml ListaDeContactos
+
+class ListaDeContactos {
+    - String nombre
+    - NavigableSet contactos
+    + agregarContacto(Contacto)
+    + agregarContactos(Contactos)
+    + buscarContactosPorNúmero(): Set
+    + buscarContactosPorAlias(): Set
+}
+class Directorio {
+    - String nombre
+    - ArrayList listasDeContactos
+    + agregarListasDeContacto()
+    + buscar()
+    - buscarPorAlias()
+    - buscarPorNúmero()
+    {static} + imprimirBúsqueda()
+}
+
+package teléfonos {
+    class NúmeroDeTeléfono #AliceBlue ##[bold]Blue {
+        # String númeroDeTeléfono
+        + getNúmeroDeTeléfono(): String
+        {abstract} # esUnNúmeroVálido(): Boolean
+        - validarNúmero()
+    }
+    class TeléfonoMóvil {
+
+    }
+    class TeléfonoFijo {
+
+    }
+    TeléfonoMóvil -up-|> NúmeroDeTeléfono
+    TeléfonoFijo -up-|> NúmeroDeTeléfono
+}
+
+package correos {
+    class CorreoElectrónico #AliceBlue ##[bold]Blue {
+        # String correo
+        + getCorreoElectrónico(): String
+        {abstract} # esUnCorreoVálido(): Boolean
+        - validarCorreo()
+    }
+    class Gmail {
+
+    }
+    class Hotmail {
+
+    }
+    class ProtonMail {
+
+    }
+    Gmail --|> CorreoElectrónico
+    Hotmail --|> CorreoElectrónico
+    ProtonMail --|> CorreoElectrónico
+}
+
+package contactos {
+    class Contacto #AliceBlue ##[bold]Blue {
+        # String alias
+        # String categoría
+        # NavigableSet númerosDeTeléfono
+        + agregarNúmeroDeTeléfono(Numero)
+        + agregarNúmerosDeTeléfono(Numero)
+    }
+    class ContactoEmpresarial {
+        - correo
+    }
+    class ContactoPersonal {
+        - cumpleaños
+    }
+    ContactoEmpresarial --|> Contacto
+    ContactoPersonal --|> Contacto
+}
+
+Directorio --> "*" ListaDeContactos
+ListaDeContactos -right-> "*" Contacto
+Contacto --* "*" NúmeroDeTeléfono
+ContactoEmpresarial --* "1" CorreoElectrónico
+
+@enduml
